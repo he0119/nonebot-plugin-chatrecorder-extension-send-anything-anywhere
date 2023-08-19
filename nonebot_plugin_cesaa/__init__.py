@@ -83,6 +83,7 @@ async def get_message_records_by_target(
     kwargs.update(target_to_kwargs(target))
     return await get_message_records(**kwargs)
 
+
 async def get_messages_plain_text_by_target(
     target: PlatformTarget, **kwargs
 ) -> List[str]:
