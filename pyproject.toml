@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "nonebot-plugin-chatrecorder-extension-send-anything-anywhere"
 version = "0.1.0"
-description = "为 chatrecorder 添加 saa PlatformTarget 支持"
+description = "为 chatrecorder 添加 send-anything-anywhere 的 PlatformTarget 支持"
 authors = ["hemengyang <hmy0119@gmail.com>"]
 license = "MIT"
 readme = "README.md"
