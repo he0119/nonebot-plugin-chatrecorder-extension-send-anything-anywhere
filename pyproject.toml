@@ -24,6 +24,7 @@ pytest-asyncio = "^0.21.0"
 gevent = "^22.10.2"
 asyncpg = "*"
 aiomysql = "*"
+nonebot-adapter-onebot = "^2.2.4"
 
 [tool.nonebot]
 plugins = ["nonebot_plugin_cesaa"]

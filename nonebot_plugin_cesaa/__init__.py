@@ -69,10 +69,10 @@ def target_to_kwargs(target: PlatformTarget) -> Dict[str, Any]:
         raise ValueError(f"不支持的 PlatformTarget 类型：{target}")
 
     return {
-        "platforms": [platform],
-        "id1s": [id1],
-        "id2s": [id2],
-        "id3s": [id3],
+        "platforms": [platform] if platform is not None else None,
+        "id1s": [id1] if id1 is not None else None,
+        "id2s": [id2] if id2 is not None else None,
+        "id3s": [id3] if id3 is not None else None,
     }
 
 
