@@ -1,0 +1,52 @@
+[tool.poetry]
+name = "nonebot-plugin-chatrecorder-extension-send-anything-anywhere"
+version = "0.1.0"
+description = "为 chatrecorder 添加 saa PlatformTarget 支持"
+authors = ["hemengyang <hmy0119@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/he0119/nonebot-plugin-chatrecorder-extension-send-anything-anywhere"
+repository = "https://github.com/he0119/nonebot-plugin-chatrecorder-extension-send-anything-anywhere"
+documentation = "https://github.com/he0119/nonebot-plugin-chatrecorder-extension-send-anything-anywhere#readme"
+packages = [{ include = "nonebot_plugin_cesaa" }]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+nonebot-plugin-chatrecorder = "^0.4.1"
+nonebot-plugin-send-anything-anywhere = "^0.3.0"
+
+[tool.poetry.group.dev.dependencies]
+nonebug = "^0.3.1"
+pytest-cov = "^4.0.0"
+pytest-xdist = "^3.1.0"
+pytest-mock = "^3.7.0"
+pytest-asyncio = "^0.21.0"
+gevent = "^22.10.2"
+asyncpg = "*"
+aiomysql = "*"
+
+[tool.nonebot]
+plugins = ["nonebot_plugin_cesaa"]
+adapters = [
+  { name = "OneBot V12", module_name = "nonebot.adapters.onebot.v12", project_link = "nonebot-adapter-onebot", desc = "OneBot V12 协议" },
+  { name = "OneBot V11", module_name = "nonebot.adapters.onebot.v11", project_link = "nonebot-adapter-onebot", desc = "OneBot V11 协议" },
+]
+
+[tool.black]
+line-length = 88
+
+[tool.isort]
+profile = "black"
+line_length = 88
+skip_gitignore = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+
+[tool.pyright]
+pythonVersion = "3.8"
+pythonPlatform = "All"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
