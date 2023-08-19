@@ -129,10 +129,16 @@ async def test_target(app: App, message_record: None):
     )
     assert msgs == ["qq-10000-10"]
 
-    # 主动提供 id1s 会被忽略
+    # target 与主动提供的 id 相互独立
     msgs = await get_messages_plain_text_by_target(
         target,
-        types=["message"],  # 排除机器人自己发的消息
-        id1s=["11"],
+        id1s=["10"],
     )
     assert msgs == ["qq-10000-10"]
+
+    msgs = await get_messages_plain_text_by_target(
+        target,
+        types=["message"],
+        id1s=["11"],
+    )
+    assert msgs == []
