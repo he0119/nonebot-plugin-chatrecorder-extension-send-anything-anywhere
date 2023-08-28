@@ -116,28 +116,36 @@ async def message_record(app: App):
 async def test_target(app: App, message_record: None):
     from nonebot_plugin_saa import TargetQQGroup
 
-    from nonebot_plugin_cesaa import get_messages_plain_text_by_target
+    from nonebot_plugin_cesaa import get_messages_plain_text
+
+    msgs = await get_messages_plain_text()
+    assert msgs == [
+        "qq-10000-bot",
+        "qq-10000-10",
+        "qqguild-100000-10000-bot",
+        "qqguild-100000-10000-10",
+    ]
 
     target = TargetQQGroup(group_id=10000)
 
-    msgs = await get_messages_plain_text_by_target(target)
+    msgs = await get_messages_plain_text(target=target)
     assert msgs == ["qq-10000-bot", "qq-10000-10"]
 
-    msgs = await get_messages_plain_text_by_target(
-        target,
+    msgs = await get_messages_plain_text(
+        target=target,
         types=["message"],  # 排除机器人自己发的消息
     )
     assert msgs == ["qq-10000-10"]
 
     # target 与主动提供的 id 相互独立
-    msgs = await get_messages_plain_text_by_target(
-        target,
+    msgs = await get_messages_plain_text(
+        target=target,
         id1s=["10"],
     )
     assert msgs == ["qq-10000-10"]
 
-    msgs = await get_messages_plain_text_by_target(
-        target,
+    msgs = await get_messages_plain_text(
+        target=target,
         types=["message"],
         id1s=["11"],
     )

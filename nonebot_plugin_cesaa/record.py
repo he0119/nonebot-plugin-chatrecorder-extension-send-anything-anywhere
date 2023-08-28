@@ -1,4 +1,4 @@
-from typing import List, Sequence
+from typing import List, Optional, Sequence
 
 from nonebot.adapters import Message
 from nonebot_plugin_chatrecorder import MessageRecord, deserialize_message
@@ -16,9 +16,8 @@ from nonebot_plugin_saa import (
     TargetQQGuildDirect,
     TargetQQPrivate,
 )
-from nonebot_plugin_session import Session, SessionIdType, SessionLevel
 from nonebot_plugin_session.model import SessionModel
-from sqlalchemy import ColumnElement, or_, select
+from sqlalchemy import ColumnElement, select
 from sqlalchemy.orm import selectinload
 from sqlalchemy.sql import ColumnElement
 
@@ -80,12 +79,38 @@ def target_to_filter_statement(target: PlatformTarget) -> List[ColumnElement[boo
     return whereclause
 
 
-async def get_message_records_by_target(
-    target: PlatformTarget, **kwargs
+async def get_message_records(
+    *, target: Optional[PlatformTarget] = None, **kwargs
 ) -> Sequence[MessageRecord]:
-    """根据 PlatformTarget 获取消息记录列表"""
+    """获取消息记录
+
+    参数:
+      * ``target: Optional[PlatformTarget]``: 发送目标，传入时会根据 `PlatformTarget` 中的字段筛选
+      * ``session: Optional[Session]``: 会话模型，传入时会根据 `session` 中的字段筛选
+      * ``id_type: SessionIdType``: 会话 id 类型，仅在传入 `session` 时有效
+      * ``include_platform: bool``: 是否限制平台类型，仅在传入 `session` 时有效
+      * ``include_bot_type: bool``: 是否限制适配器类型，仅在传入 `session` 时有效
+      * ``include_bot_id: bool``: 是否限制 bot id，仅在传入 `session` 时有效
+      * ``bot_ids: Optional[Iterable[str]]``: bot id 列表，为空表示所有 bot id
+      * ``bot_types: Optional[Iterable[str]]``: 协议适配器类型列表，为空表示所有适配器
+      * ``platforms: Optional[Iterable[str]]``: 平台类型列表，为空表示所有平台
+      * ``levels: Optional[Iterable[Union[str, SessionLevel]]]``: 会话级别列表，为空表示所有级别
+      * ``id1s: Optional[Iterable[str]]``: 会话 id1（用户级 id）列表，为空表示所有 id
+      * ``id2s: Optional[Iterable[str]]``: 会话 id2（群组级 id）列表，为空表示所有 id
+      * ``id3s: Optional[Iterable[str]]``: 会话 id3（两级群组级 id）列表，为空表示所有 id
+      * ``exclude_id1s: Optional[Iterable[str]]``: 不包含的会话 id1（用户级 id）列表，为空表示不限制
+      * ``exclude_id2s: Optional[Iterable[str]]``: 不包含的会话 id2（群组级 id）列表，为空表示不限制
+      * ``exclude_id3s: Optional[Iterable[str]]``: 不包含的会话 id3（两级群组级 id）列表，为空表示不限制
+      * ``time_start: Optional[datetime]``: 起始时间，为空表示不限制起始时间（传入带时区的时间或 UTC 时间）
+      * ``time_stop: Optional[datetime]``: 结束时间，为空表示不限制结束时间（传入带时区的时间或 UTC 时间）
+      * ``types: Optional[Iterable[Literal["message", "message_sent"]]]``: 消息事件类型列表，为空表示所有类型
+
+    返回值:
+      * ``List[MessageRecord]``: 消息记录列表
+    """
     whereclause = filter_statement(**kwargs)
-    whereclause.extend(target_to_filter_statement(target))
+    if target:
+        whereclause.extend(target_to_filter_statement(target))
     statement = (
         select(MessageRecord)
         .where(*whereclause)
@@ -97,21 +122,72 @@ async def get_message_records_by_target(
     return records
 
 
-async def get_messages_by_target(**kwargs) -> Sequence[Message]:
-    """根据 PlatformTarget 获取消息列表"""
-    records = await get_message_records_by_target(**kwargs)
+async def get_messages(**kwargs) -> Sequence[Message]:
+    """获取消息记录的消息列表
+
+    参数:
+      * ``target: Optional[PlatformTarget]``: 发送目标，传入时会根据 `PlatformTarget` 中的字段筛选
+      * ``session: Optional[Session]``: 会话模型，传入时会根据 `session` 中的字段筛选
+      * ``id_type: SessionIdType``: 会话 id 类型，仅在传入 `session` 时有效
+      * ``include_platform: bool``: 是否限制平台类型，仅在传入 `session` 时有效
+      * ``include_bot_type: bool``: 是否限制适配器类型，仅在传入 `session` 时有效
+      * ``include_bot_id: bool``: 是否限制 bot id，仅在传入 `session` 时有效
+      * ``bot_ids: Optional[Iterable[str]]``: bot id 列表，为空表示所有 bot id
+      * ``bot_types: Optional[Iterable[str]]``: 协议适配器类型列表，为空表示所有适配器
+      * ``platforms: Optional[Iterable[str]]``: 平台类型列表，为空表示所有平台
+      * ``levels: Optional[Iterable[Union[str, SessionLevel]]]``: 会话级别列表，为空表示所有级别
+      * ``id1s: Optional[Iterable[str]]``: 会话 id1（用户级 id）列表，为空表示所有 id
+      * ``id2s: Optional[Iterable[str]]``: 会话 id2（群组级 id）列表，为空表示所有 id
+      * ``id3s: Optional[Iterable[str]]``: 会话 id3（两级群组级 id）列表，为空表示所有 id
+      * ``exclude_id1s: Optional[Iterable[str]]``: 不包含的会话 id1（用户级 id）列表，为空表示不限制
+      * ``exclude_id2s: Optional[Iterable[str]]``: 不包含的会话 id2（群组级 id）列表，为空表示不限制
+      * ``exclude_id3s: Optional[Iterable[str]]``: 不包含的会话 id3（两级群组级 id）列表，为空表示不限制
+      * ``time_start: Optional[datetime]``: 起始时间，为空表示不限制起始时间（传入带时区的时间或 UTC 时间）
+      * ``time_stop: Optional[datetime]``: 结束时间，为空表示不限制结束时间（传入带时区的时间或 UTC 时间）
+      * ``types: Optional[Iterable[Literal["message", "message_sent"]]]``: 消息事件类型列表，为空表示所有类型
+
+    返回值:
+      * ``List[Message]``: 消息列表
+    """
+    records = await get_message_records(**kwargs)
     return [
         deserialize_message(record.session.bot_type, record.message)
         for record in records
     ]
 
 
-async def get_messages_plain_text_by_target(
-    target: PlatformTarget, **kwargs
+async def get_messages_plain_text(
+    *, target: Optional[PlatformTarget] = None, **kwargs
 ) -> Sequence[str]:
-    """根据 PlatformTarget 获取纯文本消息列表"""
+    """获取消息记录的纯文本消息列表
+
+    参数:
+      * ``target: Optional[PlatformTarget]``: 发送目标，传入时会根据 `PlatformTarget` 中的字段筛选
+      * ``session: Optional[Session]``: 会话模型，传入时会根据 `session` 中的字段筛选
+      * ``id_type: SessionIdType``: 会话 id 类型，仅在传入 `session` 时有效
+      * ``include_platform: bool``: 是否限制平台类型，仅在传入 `session` 时有效
+      * ``include_bot_type: bool``: 是否限制适配器类型，仅在传入 `session` 时有效
+      * ``include_bot_id: bool``: 是否限制 bot id，仅在传入 `session` 时有效
+      * ``bot_ids: Optional[Iterable[str]]``: bot id 列表，为空表示所有 bot id
+      * ``bot_types: Optional[Iterable[str]]``: 协议适配器类型列表，为空表示所有适配器
+      * ``platforms: Optional[Iterable[str]]``: 平台类型列表，为空表示所有平台
+      * ``levels: Optional[Iterable[Union[str, SessionLevel]]]``: 会话级别列表，为空表示所有级别
+      * ``id1s: Optional[Iterable[str]]``: 会话 id1（用户级 id）列表，为空表示所有 id
+      * ``id2s: Optional[Iterable[str]]``: 会话 id2（群组级 id）列表，为空表示所有 id
+      * ``id3s: Optional[Iterable[str]]``: 会话 id3（两级群组级 id）列表，为空表示所有 id
+      * ``exclude_id1s: Optional[Iterable[str]]``: 不包含的会话 id1（用户级 id）列表，为空表示不限制
+      * ``exclude_id2s: Optional[Iterable[str]]``: 不包含的会话 id2（群组级 id）列表，为空表示不限制
+      * ``exclude_id3s: Optional[Iterable[str]]``: 不包含的会话 id3（两级群组级 id）列表，为空表示不限制
+      * ``time_start: Optional[datetime]``: 起始时间，为空表示不限制起始时间（传入带时区的时间或 UTC 时间）
+      * ``time_stop: Optional[datetime]``: 结束时间，为空表示不限制结束时间（传入带时区的时间或 UTC 时间）
+      * ``types: Optional[Iterable[Literal["message", "message_sent"]]]``: 消息事件类型列表，为空表示所有类型
+
+    返回值:
+      * ``List[str]``: 纯文本消息列表
+    """
     whereclause = filter_statement(**kwargs)
-    whereclause.extend(target_to_filter_statement(target))
+    if target:
+        whereclause.extend(target_to_filter_statement(target))
     statement = select(MessageRecord.plain_text).where(*whereclause).join(SessionModel)
     async with create_session() as db_session:
         records = (await db_session.scalars(statement)).all()

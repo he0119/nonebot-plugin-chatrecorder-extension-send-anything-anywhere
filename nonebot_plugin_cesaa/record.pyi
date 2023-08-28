@@ -6,9 +6,9 @@ from nonebot_plugin_chatrecorder import MessageRecord
 from nonebot_plugin_saa import PlatformTarget
 from nonebot_plugin_session import Session, SessionIdType, SessionLevel
 
-async def get_message_records_by_target(
-    target: PlatformTarget,
+async def get_message_records(
     *,
+    target: Optional[PlatformTarget] = None,
     session: Optional[Session] = None,
     id_type: SessionIdType = SessionIdType.GROUP_USER,
     include_platform: bool = True,
@@ -28,9 +28,9 @@ async def get_message_records_by_target(
     time_stop: Optional[datetime] = None,
     types: Optional[Iterable[Literal["message", "message_sent"]]] = None,
 ) -> List[MessageRecord]: ...
-async def get_messages_by_target(
-    target: PlatformTarget,
+async def get_messages(
     *,
+    target: Optional[PlatformTarget] = None,
     session: Optional[Session] = None,
     id_type: SessionIdType = SessionIdType.GROUP_USER,
     include_platform: bool = True,
@@ -50,9 +50,9 @@ async def get_messages_by_target(
     time_stop: Optional[datetime] = None,
     types: Optional[Iterable[Literal["message", "message_sent"]]] = None,
 ) -> List[Message]: ...
-async def get_messages_plain_text_by_target(
-    target: PlatformTarget,
+async def get_messages_plain_text(
     *,
+    target: Optional[PlatformTarget] = None,
     session: Optional[Session] = None,
     id_type: SessionIdType = SessionIdType.GROUP_USER,
     include_platform: bool = True,
