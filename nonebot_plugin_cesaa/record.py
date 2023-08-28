@@ -156,7 +156,9 @@ async def get_messages(**kwargs) -> Sequence[Message]:
     ]
 
 
-async def get_messages_plain_text(target: PlatformTarget, **kwargs) -> Sequence[str]:
+async def get_messages_plain_text(
+    *, target: Optional[PlatformTarget] = None, **kwargs
+) -> Sequence[str]:
     """获取消息记录的纯文本消息列表
 
     参数:
@@ -184,7 +186,8 @@ async def get_messages_plain_text(target: PlatformTarget, **kwargs) -> Sequence[
       * ``List[str]``: 纯文本消息列表
     """
     whereclause = filter_statement(**kwargs)
-    whereclause.extend(target_to_filter_statement(target))
+    if target:
+        whereclause.extend(target_to_filter_statement(target))
     statement = select(MessageRecord.plain_text).where(*whereclause).join(SessionModel)
     async with create_session() as db_session:
         records = (await db_session.scalars(statement)).all()

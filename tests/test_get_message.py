@@ -118,6 +118,14 @@ async def test_target(app: App, message_record: None):
 
     from nonebot_plugin_cesaa import get_messages_plain_text
 
+    msgs = await get_messages_plain_text()
+    assert msgs == [
+        "qq-10000-bot",
+        "qq-10000-10",
+        "qqguild-100000-10000-bot",
+        "qqguild-100000-10000-10",
+    ]
+
     target = TargetQQGroup(group_id=10000)
 
     msgs = await get_messages_plain_text(target=target)
