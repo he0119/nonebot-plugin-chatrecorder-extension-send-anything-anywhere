@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+### Changed
+
+- 与 nonebot_plugin_session 的函数命名保持一致
+
 ## [0.1.0] - 2023-08-19
 
 ### Added
