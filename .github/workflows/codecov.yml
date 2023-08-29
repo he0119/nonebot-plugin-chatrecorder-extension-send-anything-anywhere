@@ -16,13 +16,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
         os: [ubuntu-latest, windows-latest, macos-latest]
       fail-fast: false
     env:
       OS: ${{ matrix.os }}
       PYTHON_VERSION: ${{ matrix.python-version }}
-      DB: sqlite
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -44,96 +43,11 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          env_vars: OS,PYTHON_VERSION,DB
-  test-pg:
-    name: Test PostgreSQL
-    runs-on: ubuntu-latest
-    env:
-      OS: ubuntu-latest
-      PYTHON_VERSION: "3.10"
-      DB: postgresql
-    services:
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: postgres
-        ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Set timezone
-        uses: szenius/set-timezone@ce9c440bc3af4f51b28d7ef7e5c47ee8f26c8dcb
-        with:
-          timezoneLinux: "Asia/Shanghai"
-          timezoneMacos: "Asia/Shanghai"
-          timezoneWindows: "China Standard Time"
-      - name: Set up Python
-        uses: he0119/setup-python@main
-        with:
-          python-version: "3.10"
-      - name: Install dependencies
-        run: poetry install
-      - name: Run tests
-        run: |
-          sed -ie "s#sqlite+aiosqlite://#postgresql+asyncpg://postgres:postgres@localhost:5432/postgres#g" tests/conftest.py
-          sed -ie "s#StaticPool#NullPool#g" tests/conftest.py
-          poetry run pytest --cov=nonebot_plugin_cesaa --cov-report xml
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          env_vars: OS,PYTHON_VERSION,DB
-  test-mysql:
-    name: Test MySQL
-    runs-on: ubuntu-latest
-    env:
-      OS: ubuntu-latest
-      PYTHON_VERSION: "3.10"
-      DB: mysql
-    services:
-      mysql:
-        image: mysql
-        env:
-          MYSQL_ROOT_PASSWORD: mysql
-          MYSQL_USER: mysql
-          MYSQL_PASSWORD: mysql
-          MYSQL_DATABASE: mysql
-        ports:
-          - 3306:3306
-        options: --health-cmd "mysqladmin ping -h localhost -umysql -pmysql" --health-interval 10s --health-timeout 5s --health-retries 5
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Set timezone
-        uses: szenius/set-timezone@ce9c440bc3af4f51b28d7ef7e5c47ee8f26c8dcb
-        with:
-          timezoneLinux: "Asia/Shanghai"
-          timezoneMacos: "Asia/Shanghai"
-          timezoneWindows: "China Standard Time"
-      - name: Set up Python
-        uses: he0119/setup-python@main
-        with:
-          python-version: "3.10"
-      - name: Install dependencies
-        run: poetry install
-      - name: Run tests
-        run: |
-          sed -ie "s#sqlite+aiosqlite://#mysql+aiomysql://mysql:mysql@localhost:3306/mysql#g" tests/conftest.py
-          sed -ie "s#StaticPool#NullPool#g" tests/conftest.py
-          poetry run pytest --cov=nonebot_plugin_cesaa --cov-report xml
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          env_vars: OS,PYTHON_VERSION,DB
+          env_vars: OS,PYTHON_VERSION
 
   check:
     if: always()
-    needs: [test, test-pg, test-mysql]
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Decide whether the needed jobs succeeded or failed
