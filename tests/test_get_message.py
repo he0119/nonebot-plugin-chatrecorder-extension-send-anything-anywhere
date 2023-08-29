@@ -116,6 +116,88 @@ async def message_record(app: App):
 async def test_target(app: App, message_record: None):
     from nonebot_plugin_saa import TargetQQGroup
 
+    from nonebot_plugin_cesaa import get_messages
+
+    msgs = await get_messages()
+    assert msgs == [
+        Message("qq-10000-bot"),
+        Message("qq-10000-10"),
+        MessageV12("qqguild-100000-10000-bot"),
+        MessageV12("qqguild-100000-10000-10"),
+    ]
+
+    target = TargetQQGroup(group_id=10000)
+
+    msgs = await get_messages(target=target)
+    assert msgs == [Message("qq-10000-bot"), Message("qq-10000-10")]
+
+    msgs = await get_messages(
+        target=target,
+        types=["message"],  # 排除机器人自己发的消息
+    )
+    assert msgs == [Message("qq-10000-10")]
+
+    # target 与主动提供的 id 相互独立
+    msgs = await get_messages(
+        target=target,
+        id1s=["10"],
+    )
+    assert msgs == [Message("qq-10000-10")]
+
+    msgs = await get_messages(
+        target=target,
+        types=["message"],
+        id1s=["11"],
+    )
+    assert msgs == []
+
+
+async def test_target_record(app: App, message_record: None):
+    from nonebot_plugin_saa import TargetQQGroup
+
+    from nonebot_plugin_cesaa import get_message_records
+
+    msgs = await get_message_records()
+    plain_text = [msg.plain_text for msg in msgs]
+    assert plain_text == [
+        "qq-10000-bot",
+        "qq-10000-10",
+        "qqguild-100000-10000-bot",
+        "qqguild-100000-10000-10",
+    ]
+
+    target = TargetQQGroup(group_id=10000)
+
+    msgs = await get_message_records(target=target)
+    plain_text = [msg.plain_text for msg in msgs]
+    assert plain_text == ["qq-10000-bot", "qq-10000-10"]
+
+    msgs = await get_message_records(
+        target=target,
+        types=["message"],  # 排除机器人自己发的消息
+    )
+    plain_text = [msg.plain_text for msg in msgs]
+    assert plain_text == ["qq-10000-10"]
+
+    # target 与主动提供的 id 相互独立
+    msgs = await get_message_records(
+        target=target,
+        id1s=["10"],
+    )
+    plain_text = [msg.plain_text for msg in msgs]
+    assert plain_text == ["qq-10000-10"]
+
+    msgs = await get_message_records(
+        target=target,
+        types=["message"],
+        id1s=["11"],
+    )
+    assert msgs == []
+
+
+async def test_target_plain_text(app: App, message_record: None):
+    from nonebot_plugin_saa import TargetQQGroup
+
     from nonebot_plugin_cesaa import get_messages_plain_text
 
     msgs = await get_messages_plain_text()
