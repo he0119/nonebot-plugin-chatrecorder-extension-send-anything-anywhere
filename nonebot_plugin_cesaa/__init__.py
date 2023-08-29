@@ -1,6 +1,7 @@
 from nonebot import require
-from nonebot.plugin import PluginMetadata
+from nonebot.plugin import PluginMetadata, inherit_supported_adapters
 
+require("nonebot_plugin_session")
 require("nonebot_plugin_chatrecorder")
 require("nonebot_plugin_saa")
 
@@ -14,13 +15,7 @@ __plugin_meta__ = PluginMetadata(
     usage="请参考文档",
     type="library",
     homepage="https://github.com/he0119/nonebot-plugin-chatrecorder-extension-send-anything-anywhere",
-    supported_adapters={
-        "~onebot.v11",
-        "~onebot.v12",
-        "~console",
-        "~kaiheila",
-        "~qqguild",
-        "~telegram",
-        "~feishu",
-    },
+    supported_adapters=inherit_supported_adapters(
+        "nonebot_plugin_chatrecorder", "nonebot_plugin_saa"
+    ),
 )
