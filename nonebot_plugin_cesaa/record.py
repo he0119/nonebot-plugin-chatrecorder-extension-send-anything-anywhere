@@ -19,7 +19,6 @@ from nonebot_plugin_saa import (
 from nonebot_plugin_session.model import SessionModel
 from sqlalchemy import ColumnElement, select
 from sqlalchemy.orm import selectinload
-from sqlalchemy.sql import ColumnElement
 
 
 def target_to_filter_statement(target: PlatformTarget) -> List[ColumnElement[bool]]:
