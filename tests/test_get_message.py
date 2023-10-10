@@ -14,9 +14,9 @@ from nonebug import App
 async def message_record(app: App):
     from nonebot_plugin_chatrecorder import serialize_message
     from nonebot_plugin_chatrecorder.model import MessageRecord
-    from nonebot_plugin_datastore import create_session
+    from nonebot_plugin_orm import get_session
     from nonebot_plugin_session import Session, SessionLevel
-    from nonebot_plugin_session.model import get_or_add_session_model
+    from nonebot_plugin_session_orm import get_session_persist_id
 
     async with app.test_api() as ctx:
         adapter = Adapter(get_driver())
@@ -69,14 +69,14 @@ async def message_record(app: App):
         ),
     ]
     session_ids: List[int] = []
-    async with create_session() as db_session:
+    async with get_session() as db_session:
         for session in sessions:
-            session_model = await get_or_add_session_model(session, db_session)
-            session_ids.append(session_model.id)
+            session_id = await get_session_persist_id(session)
+            session_ids.append(session_id)
 
     records = [
         MessageRecord(
-            session_id=session_ids[0],
+            session_persist_id=session_ids[0],
             time=datetime(2022, 1, 2, 4, 0, 0),
             type="message_sent",
             message_id="1",
@@ -84,7 +84,7 @@ async def message_record(app: App):
             plain_text="qq-10000-bot",
         ),
         MessageRecord(
-            session_id=session_ids[1],
+            session_persist_id=session_ids[1],
             time=datetime(2022, 1, 2, 4, 0, 0),
             type="message",
             message_id="2",
@@ -92,7 +92,7 @@ async def message_record(app: App):
             plain_text="qq-10000-10",
         ),
         MessageRecord(
-            session_id=session_ids[2],
+            session_persist_id=session_ids[2],
             time=datetime(2022, 1, 2, 4, 0, 0),
             type="message_sent",
             message_id="3",
@@ -100,7 +100,7 @@ async def message_record(app: App):
             plain_text="qqguild-100000-10000-bot",
         ),
         MessageRecord(
-            session_id=session_ids[3],
+            session_persist_id=session_ids[3],
             time=datetime(2022, 1, 2, 4, 0, 0),
             type="message",
             message_id="4",
@@ -108,7 +108,7 @@ async def message_record(app: App):
             plain_text="qqguild-100000-10000-10",
         ),
     ]
-    async with create_session() as db_session:
+    async with get_session() as db_session:
         db_session.add_all(records)
         await db_session.commit()
 

@@ -10,11 +10,10 @@ repository = "https://github.com/he0119/nonebot-plugin-chatrecorder-extension-se
 documentation = "https://github.com/he0119/nonebot-plugin-chatrecorder-extension-send-anything-anywhere#readme"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 nonebot2 = "^2.0.1"
-nonebot-plugin-chatrecorder = "^0.4.2"
+nonebot-plugin-chatrecorder = {git = "https://github.com/noneplugin/nonebot-plugin-chatrecorder.git", rev = "feat/orm"}
 nonebot-plugin-send-anything-anywhere = "^0.3.0"
-nonebot-plugin-session = "^0.1.0"
 
 [tool.poetry.group.dev.dependencies]
 nonebug = "^0.3.1"
@@ -26,6 +25,7 @@ gevent = "^23.7.0"
 asyncpg = "*"
 aiomysql = "*"
 nonebot-adapter-onebot = "^2.2.4"
+nonebot-plugin-orm = {extras = ["default"], version = "^0.1.1"}
 
 [tool.nonebot]
 plugins = ["nonebot_plugin_cesaa"]
