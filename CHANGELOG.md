@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+### Added
+
+- 适配 nb orm
+
 ## [0.2.1] - 2023-08-29
 
 ### Added
