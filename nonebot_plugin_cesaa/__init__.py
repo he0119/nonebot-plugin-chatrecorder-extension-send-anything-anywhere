@@ -1,7 +1,6 @@
 from nonebot import require
 from nonebot.plugin import PluginMetadata, inherit_supported_adapters
 
-require("nonebot_plugin_session")
 require("nonebot_plugin_chatrecorder")
 require("nonebot_plugin_saa")
 

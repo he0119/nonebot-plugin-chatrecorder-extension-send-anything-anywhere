@@ -8,32 +8,26 @@ from sqlalchemy import StaticPool, delete
 
 def pytest_configure(config: pytest.Config) -> None:
     config.stash[NONEBOT_INIT_KWARGS] = {
-        "datastore_database_url": "sqlite+aiosqlite://",
+        "sqlalchemy_database_url": "sqlite+aiosqlite:///:memory:",
         "datastore_engine_options": {"poolclass": StaticPool},
-        "alconna_use_command_start": True,
         "driver": "~none",
+        "alembic_startup_check": False,
     }
 
 
 @pytest.fixture
 async def app(tmp_path: Path):
     # 加载插件
-    nonebot.require("nonebot_plugin_chatrecorder")
-    from nonebot_plugin_datastore.config import plugin_config
-    from nonebot_plugin_datastore.db import create_session, init_db
+    nonebot.require("nonebot_plugin_cesaa")
+    from nonebot_plugin_chatrecorder.model import MessageRecord
+    from nonebot_plugin_orm import get_session, init_orm
+    from nonebot_plugin_session_orm import SessionModel
 
-    plugin_config.datastore_cache_dir = tmp_path / "cache"
-    plugin_config.datastore_config_dir = tmp_path / "config"
-    plugin_config.datastore_data_dir = tmp_path / "data"
-
-    await init_db()
+    await init_orm()
 
     yield App()
 
-    from nonebot_plugin_chatrecorder.model import MessageRecord
-    from nonebot_plugin_session.model import SessionModel
-
     # 清理数据
-    async with create_session() as session, session.begin():
+    async with get_session() as session, session.begin():
         await session.execute(delete(MessageRecord))
         await session.execute(delete(SessionModel))

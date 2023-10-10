@@ -3,7 +3,7 @@ from typing import List, Optional, Sequence
 from nonebot.adapters import Message
 from nonebot_plugin_chatrecorder import MessageRecord, deserialize_message
 from nonebot_plugin_chatrecorder.record import filter_statement
-from nonebot_plugin_datastore import create_session
+from nonebot_plugin_orm import get_session
 from nonebot_plugin_saa import (
     PlatformTarget,
     TargetFeishuGroup,
@@ -16,9 +16,8 @@ from nonebot_plugin_saa import (
     TargetQQGuildDirect,
     TargetQQPrivate,
 )
-from nonebot_plugin_session.model import SessionModel
+from nonebot_plugin_session_orm import SessionModel
 from sqlalchemy import ColumnElement, select
-from sqlalchemy.orm import selectinload
 
 
 def target_to_filter_statement(target: PlatformTarget) -> List[ColumnElement[bool]]:
@@ -113,15 +112,16 @@ async def get_message_records(
     statement = (
         select(MessageRecord)
         .where(*whereclause)
-        .join(SessionModel)
-        .options(selectinload(MessageRecord.session))
+        .join(SessionModel, SessionModel.id == MessageRecord.session_persist_id)
     )
-    async with create_session() as db_session:
+    async with get_session() as db_session:
         records = (await db_session.scalars(statement)).all()
     return records
 
 
-async def get_messages(**kwargs) -> Sequence[Message]:
+async def get_messages(
+    *, target: Optional[PlatformTarget] = None, **kwargs
+) -> Sequence[Message]:
     """获取消息记录的消息列表
 
     参数:
@@ -148,11 +148,17 @@ async def get_messages(**kwargs) -> Sequence[Message]:
     返回值:
       * ``List[Message]``: 消息列表
     """
-    records = await get_message_records(**kwargs)
-    return [
-        deserialize_message(record.session.bot_type, record.message)
-        for record in records
-    ]
+    whereclause = filter_statement(**kwargs)
+    if target:
+        whereclause.extend(target_to_filter_statement(target))
+    statement = (
+        select(MessageRecord.message, SessionModel.bot_type)
+        .where(*whereclause)
+        .join(SessionModel, SessionModel.id == MessageRecord.session_persist_id)
+    )
+    async with get_session() as db_session:
+        results = (await db_session.execute(statement)).all()
+    return [deserialize_message(result[1], result[0]) for result in results]
 
 
 async def get_messages_plain_text(
@@ -187,7 +193,11 @@ async def get_messages_plain_text(
     whereclause = filter_statement(**kwargs)
     if target:
         whereclause.extend(target_to_filter_statement(target))
-    statement = select(MessageRecord.plain_text).where(*whereclause).join(SessionModel)
-    async with create_session() as db_session:
+    statement = (
+        select(MessageRecord.plain_text)
+        .where(*whereclause)
+        .join(SessionModel, SessionModel.id == MessageRecord.session_persist_id)
+    )
+    async with get_session() as db_session:
         records = (await db_session.scalars(statement)).all()
     return records
