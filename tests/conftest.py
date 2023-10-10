@@ -27,9 +27,6 @@ async def app(tmp_path: Path):
 
     yield App()
 
-    from nonebot_plugin_chatrecorder.model import MessageRecord
-    from nonebot_plugin_session_orm import SessionModel
-
     # 清理数据
     async with get_session() as session, session.begin():
         await session.execute(delete(MessageRecord))
