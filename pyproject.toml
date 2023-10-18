@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nonebot-plugin-cesaa"
-version = "0.3.0b2"
+version = "0.3.0"
 description = "为 chatrecorder 添加 send-anything-anywhere 的 PlatformTarget 支持"
 authors = ["hemengyang <hmy0119@gmail.com>"]
 license = "MIT"
@@ -10,7 +10,7 @@ repository = "https://github.com/he0119/nonebot-plugin-chatrecorder-extension-se
 documentation = "https://github.com/he0119/nonebot-plugin-chatrecorder-extension-send-anything-anywhere#readme"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.8"
 nonebot2 = "^2.0.1"
 nonebot-plugin-chatrecorder = "^0.5.0"
 nonebot-plugin-send-anything-anywhere = "^0.3.0"
