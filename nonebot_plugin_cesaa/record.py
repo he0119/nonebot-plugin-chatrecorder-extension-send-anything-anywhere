@@ -45,16 +45,16 @@ def target_to_filter_statement(target: PlatformTarget) -> List[ColumnElement[boo
         id2 = str(target.channel_id)
     elif isinstance(target, TargetKaiheilaPrivate):
         platform = "kaiheila"
-        id1 = str(target.user_id)
+        id1 = target.user_id
     elif isinstance(target, TargetKaiheilaChannel):
         platform = "kaiheila"
-        id2 = str(target.channel_id)
+        id2 = target.channel_id
     elif isinstance(target, TargetFeishuPrivate):
         platform = "feishu"
-        id1 = str(target.open_id)
+        id1 = target.open_id
     elif isinstance(target, TargetFeishuGroup):
         platform = "feishu"
-        id2 = str(target.chat_id)
+        id2 = target.chat_id
     elif isinstance(target, TargetTelegramCommon):
         platform = "telegram"
         id1 = str(target.chat_id)
@@ -62,20 +62,19 @@ def target_to_filter_statement(target: PlatformTarget) -> List[ColumnElement[boo
         platform = "telegram"
         id2 = str(target.chat_id)
         id3 = str(target.message_thread_id)
-    elif isinstance(target, TargetDoDoChannel):
-        platform = "dodo"
-        id2 = str(target.channel_id)
-        id3 = str(target.dodo_source_id)
     elif isinstance(target, TargetDoDoPrivate):
         platform = "dodo"
-        id2 = str(target.island_source_id)
+        id1 = target.dodo_source_id
+    elif isinstance(target, TargetDoDoChannel):
+        platform = "dodo"
+        id2 = target.channel_id
     elif isinstance(target, TargetOB12Unknow):
         if target.detail_type == "private":
             platform = target.platform
-            id1 = str(target.user_id)
+            id1 = target.user_id
         elif target.detail_type == "group":
             platform = target.platform
-            id2 = str(target.group_id)
+            id2 = target.group_id
         else:
             platform = target.platform
             id2 = target.channel_id
