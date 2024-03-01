@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+### Added
+
+- 支持 Telegram 和 DoDo
+
 ## [0.3.0] - 2023-10-18
 
 ### Added
