@@ -10,8 +10,8 @@ from nonebot.adapters.onebot.v12 import Message as MessageV12
 from nonebug import App
 
 
-@pytest.fixture
-async def message_record(app: App):
+@pytest.fixture()
+async def _message_record(app: App):
     from nonebot_plugin_chatrecorder import serialize_message
     from nonebot_plugin_chatrecorder.model import MessageRecord
     from nonebot_plugin_orm import get_session
@@ -113,7 +113,8 @@ async def message_record(app: App):
         await db_session.commit()
 
 
-async def test_target(app: App, message_record: None):
+@pytest.mark.usefixtures("_message_record")
+async def test_target(app: App):
     from nonebot_plugin_saa import TargetQQGroup
 
     from nonebot_plugin_cesaa import get_messages
@@ -152,7 +153,8 @@ async def test_target(app: App, message_record: None):
     assert msgs == []
 
 
-async def test_target_record(app: App, message_record: None):
+@pytest.mark.usefixtures("_message_record")
+async def test_target_record(app: App):
     from nonebot_plugin_saa import TargetQQGroup
 
     from nonebot_plugin_cesaa import get_message_records
@@ -195,7 +197,8 @@ async def test_target_record(app: App, message_record: None):
     assert msgs == []
 
 
-async def test_target_plain_text(app: App, message_record: None):
+@pytest.mark.usefixtures("_message_record")
+async def test_target_plain_text(app: App):
     from nonebot_plugin_saa import TargetQQGroup
 
     from nonebot_plugin_cesaa import get_messages_plain_text

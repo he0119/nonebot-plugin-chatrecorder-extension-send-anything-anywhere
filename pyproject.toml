@@ -51,8 +51,26 @@ pythonPlatform = "All"
 typeCheckingMode = "basic"
 
 [tool.ruff]
-select = ["E", "W", "F", "UP", "C", "T", "PYI", "Q"]
-ignore = ["E402", "E501", "E711", "C901", "UP037"]
+line-length = 88
+target-version = "py38"
+
+[tool.ruff.lint]
+select = [
+  "W",   # pycodestyle warnings
+  "E",   # pycodestyle errors
+  "F",   # Pyflakes
+  "UP",  # pyupgrade
+  "C4",  # flake8-comprehensions
+  "T10", # flake8-debugger
+  "T20", # flake8-print
+  "PYI", # flake8-pyi
+  "PT",  # flake8-pytest-style
+  "Q",   # flake8-quotes
+]
+ignore = [
+  "E402",  # module-import-not-at-top-of-file, Module level import not at top of cell
+  "UP037", # quoted-annotation,	Remove quotes from type annotation
+]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
