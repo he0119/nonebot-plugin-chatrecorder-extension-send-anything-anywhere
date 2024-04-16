@@ -17,11 +17,11 @@ nonebot-plugin-send-anything-anywhere = "^0.6.0,<1.0.0"
 
 [tool.poetry.group.dev.dependencies]
 nonebug = "^0.3.1"
-pytest-cov = "^4.0.0"
+pytest-cov = ">=4,<6"
 pytest-xdist = "^3.1.0"
 pytest-mock = "^3.7.0"
 pytest-asyncio = "^0.23.3"
-gevent = "^23.7.0"
+gevent = ">=23.7,<25.0"
 asyncpg = "*"
 aiomysql = "*"
 nonebot-adapter-onebot = "^2.2.4"
