@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import List
 
 import pytest
 from nonebot import get_driver
@@ -68,7 +67,7 @@ async def _message_record(app: App):
             id3="10000",
         ),
     ]
-    session_ids: List[int] = []
+    session_ids: list[int] = []
     async with get_session() as db_session:
         for session in sessions:
             session_id = await get_session_persist_id(session)

@@ -1,5 +1,6 @@
 # ruff: noqa: E501
-from typing import List, Optional, Sequence
+from typing import Optional
+from collections.abc import Sequence
 
 from nonebot.adapters import Message
 from nonebot_plugin_chatrecorder import MessageRecord, deserialize_message
@@ -25,7 +26,7 @@ from nonebot_plugin_session_orm import SessionModel
 from sqlalchemy import ColumnElement, select
 
 
-def target_to_filter_statement(target: PlatformTarget) -> List[ColumnElement[bool]]:
+def target_to_filter_statement(target: PlatformTarget) -> list[ColumnElement[bool]]:
     """将 PlatformTarget 转换为 chatrecorder 所需参数"""
     platform = None
     id1 = None
@@ -83,7 +84,7 @@ def target_to_filter_statement(target: PlatformTarget) -> List[ColumnElement[boo
     else:
         raise ValueError(f"不支持的 PlatformTarget 类型：{target}")
 
-    whereclause: List[ColumnElement[bool]] = []
+    whereclause: list[ColumnElement[bool]] = []
     if platform is not None:
         whereclause.append(SessionModel.platform == platform)
     if id1 is not None:
