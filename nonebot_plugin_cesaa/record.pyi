@@ -1,5 +1,6 @@
 from datetime import datetime
-from typing import Iterable, Literal
+from typing import Literal
+from collections.abc import Iterable
 
 from nonebot.adapters import Message
 from nonebot_plugin_chatrecorder import MessageRecord
