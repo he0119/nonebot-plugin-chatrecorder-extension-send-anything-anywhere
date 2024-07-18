@@ -3,6 +3,7 @@ from pathlib import Path
 import nonebot
 import pytest
 from nonebug import NONEBOT_INIT_KWARGS, App
+from pytest_mock import MockerFixture
 from sqlalchemy import StaticPool, delete
 
 
@@ -16,12 +17,14 @@ def pytest_configure(config: pytest.Config) -> None:
 
 
 @pytest.fixture()
-async def app(tmp_path: Path):
+async def app(tmp_path: Path, mocker: MockerFixture):
     # 加载插件
     nonebot.require("nonebot_plugin_cesaa")
     from nonebot_plugin_chatrecorder.model import MessageRecord
     from nonebot_plugin_orm import get_session, init_orm
     from nonebot_plugin_session_orm import SessionModel
+
+    mocker.patch("nonebot_plugin_orm._data_dir", tmp_path / "orm")
 
     await init_orm()
 
