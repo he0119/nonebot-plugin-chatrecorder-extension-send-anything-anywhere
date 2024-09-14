@@ -40,6 +40,11 @@ jobs:
           cache-dependency-glob: "uv.lock"
           cache-suffix: ${{ env.PYTHON_VERSION }}
 
+      - name: Install prerequisites
+        run: |
+          uv python pin ${{ env.PYTHON_VERSION }}
+          uv sync
+
       - name: Run tests
         run: uv run poe test
 
