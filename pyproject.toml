@@ -44,6 +44,7 @@ dev-dependencies = [
   "nonebot-adapter-onebot>=2.4.4",
   "nonebot-plugin-orm[default]>=0.7.4",
   "poethepoet>=0.28.0",
+  "bump-my-version>=0.26.0",
 ]
 
 [tool.uv.pip]
@@ -51,6 +52,8 @@ universal = true
 
 [tool.poe.tasks]
 test = "pytest --cov=nonebot_plugin_cesaa --cov-report xml -n auto"
+bump = "bump-my-version bump"
+show-bump = "bump-my-version show-bump"
 
 [tool.pyright]
 pythonVersion = "3.9"
@@ -98,3 +101,24 @@ exclude_lines = [
 [tool.pytest.ini_options]
 addopts = ["--import-mode=importlib"]
 asyncio_mode = "auto"
+
+[tool.bumpversion]
+current_version = "0.4.0"
+commit = true
+message = "chore(release): {new_version}"
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+search = "version = \"{current_version}\""
+replace = "version = \"{new_version}\""
+
+[[tool.bumpversion.files]]
+filename = "CHANGELOG.md"
+search = "## [Unreleased]"
+replace = "## [Unreleased]\n\n## [{new_version}] - {now:%Y-%m-%d}"
+
+[[tool.bumpversion.files]]
+filename = "CHANGELOG.md"
+regex = true
+search = "\\[Unreleased\\]: (https://.+?)v{current_version}\\.\\.\\.HEAD"
+replace = "[Unreleased]: \\1v{new_version}...HEAD\n[{new_version}]: \\1v{current_version}...v{new_version}"
