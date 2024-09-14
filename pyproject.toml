@@ -50,7 +50,7 @@ dev-dependencies = [
 universal = true
 
 [tool.poe.tasks]
-test = "pytest --cov=nonebot_plugin_cesaa --cov-report xml -n auto"
+test = "pytest --cov=nonebot_plugin_cesaa --cov-report xml --junitxml=./junit.xml -n auto"
 
 [tool.pyright]
 pythonVersion = "3.9"
