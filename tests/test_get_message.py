@@ -9,7 +9,7 @@ from nonebot.adapters.onebot.v12 import Message as MessageV12
 from nonebug import App
 
 
-@pytest.fixture()
+@pytest.fixture
 async def _message_record(app: App):
     from nonebot_plugin_chatrecorder import serialize_message
     from nonebot_plugin_chatrecorder.model import MessageRecord
