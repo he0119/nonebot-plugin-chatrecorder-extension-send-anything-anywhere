@@ -857,7 +857,7 @@ wheels = [
 
 [[package]]
 name = "nonebot-plugin-cesaa"
-version = "0.4.0"
+version = "0.4.1"
 source = { editable = "." }
 dependencies = [
     { name = "nonebot-plugin-chatrecorder" },
