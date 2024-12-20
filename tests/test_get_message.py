@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 import pytest
 from nonebot import get_driver
@@ -76,7 +76,7 @@ async def _message_record(app: App):
     records = [
         MessageRecord(
             session_persist_id=session_ids[0],
-            time=datetime(2022, 1, 2, 4, 0, 0),
+            time=datetime(2022, 1, 2, 4, 0, 0, tzinfo=timezone.utc),
             type="message_sent",
             message_id="1",
             message=serialize_message(bot, Message("qq-10000-bot")),
@@ -84,7 +84,7 @@ async def _message_record(app: App):
         ),
         MessageRecord(
             session_persist_id=session_ids[1],
-            time=datetime(2022, 1, 2, 4, 0, 0),
+            time=datetime(2022, 1, 2, 4, 0, 0, tzinfo=timezone.utc),
             type="message",
             message_id="2",
             message=serialize_message(bot, Message("qq-10000-10")),
@@ -92,7 +92,7 @@ async def _message_record(app: App):
         ),
         MessageRecord(
             session_persist_id=session_ids[2],
-            time=datetime(2022, 1, 2, 4, 0, 0),
+            time=datetime(2022, 1, 2, 4, 0, 0, tzinfo=timezone.utc),
             type="message_sent",
             message_id="3",
             message=serialize_message(bot, Message("qqguild-100000-10000-bot")),
@@ -100,7 +100,7 @@ async def _message_record(app: App):
         ),
         MessageRecord(
             session_persist_id=session_ids[3],
-            time=datetime(2022, 1, 2, 4, 0, 0),
+            time=datetime(2022, 1, 2, 4, 0, 0, tzinfo=timezone.utc),
             type="message",
             message_id="4",
             message=serialize_message(bot_v12, MessageV12("qqguild-100000-10000-10")),

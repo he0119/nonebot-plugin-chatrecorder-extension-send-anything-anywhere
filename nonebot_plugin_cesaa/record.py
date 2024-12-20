@@ -1,6 +1,6 @@
 # ruff: noqa: E501
-from typing import Optional
 from collections.abc import Sequence
+from typing import Optional
 
 from nonebot.adapters import Message
 from nonebot_plugin_chatrecorder import MessageRecord, deserialize_message
