@@ -84,7 +84,7 @@ def target_to_filter_statement(target: PlatformTarget) -> list[ColumnElement[boo
     elif isinstance(target, TargetTelegramForum):
         scope = SupportScope.telegram
         scene_id = str(target.message_thread_id)
-        scene_type = SceneType.CHANNEL_CATEGORY
+        scene_type = SceneType.CHANNEL_TEXT
     elif isinstance(target, TargetDoDoPrivate):
         scope = SupportScope.dodo
         scene_id = target.dodo_source_id
