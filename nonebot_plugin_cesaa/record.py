@@ -88,6 +88,7 @@ def target_to_filter_statement(target: PlatformTarget) -> list[ColumnElement[boo
     elif isinstance(target, TargetDoDoPrivate):
         scope = SupportScope.dodo
         scene_id = target.dodo_source_id
+        scene_type = SceneType.PRIVATE
     elif isinstance(target, TargetDoDoChannel):
         scope = SupportScope.dodo
         scene_id = target.channel_id
