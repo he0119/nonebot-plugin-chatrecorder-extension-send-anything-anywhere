@@ -1,6 +1,6 @@
 [project]
 name = "nonebot-plugin-cesaa"
-version = "0.4.2"
+version = "0.5.0"
 description = "为 chatrecorder 添加 send-anything-anywhere 的 PlatformTarget 支持"
 authors = [{ name = "uy_sun", email = "hmy0119@gmail.com" }]
 readme = "README.md"
@@ -111,7 +111,7 @@ asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "session"
 
 [tool.bumpversion]
-current_version = "0.4.2"
+current_version = "0.5.0"
 commit = true
 message = "chore(release): {new_version}"
 

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ## [Unreleased]
 
+## [0.5.0] - 2024-12-24
+
 ### Added
 
 - 适配 chatrecorder 0.7.0 和 saa 0.7.1
@@ -53,7 +55,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 - 可以使用的版本。
 
-[Unreleased]: https://github.com/he0119/nonebot-plugin-chatrecorder-extension-send-anything-anywhere/compare/v0.4.2...HEAD
+[Unreleased]: https://github.com/he0119/nonebot-plugin-chatrecorder-extension-send-anything-anywhere/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/he0119/nonebot-plugin-chatrecorder-extension-send-anything-anywhere/compare/v0.4.2...v0.5.0
 [0.4.2]: https://github.com/he0119/nonebot-plugin-chatrecorder-extension-send-anything-anywhere/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/he0119/nonebot-plugin-chatrecorder-extension-send-anything-anywhere/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/he0119/nonebot-plugin-chatrecorder-extension-send-anything-anywhere/compare/v0.3.0...v0.4.0
