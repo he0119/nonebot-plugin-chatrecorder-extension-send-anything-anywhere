@@ -37,13 +37,8 @@ jobs:
         uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
-          cache-dependency-glob: "uv.lock"
-          cache-suffix: ${{ env.PYTHON_VERSION }}
-
-      - name: Install prerequisites
-        run: |
-          uv python pin ${{ env.PYTHON_VERSION }}
-          uv sync
+          python-version: ${{ matrix.python-version }}
+          cache-suffix: ${{ matrix.python-version }}
 
       - name: Run tests
         run: uv run poe test
