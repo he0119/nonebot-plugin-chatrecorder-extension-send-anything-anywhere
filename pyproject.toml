@@ -8,7 +8,7 @@ license = { file = "LICENSE" }
 requires-python = ">= 3.9"
 dependencies = [
   "nonebot2>=2.2.0",
-  "nonebot-plugin-chatrecorder>=0.6.0",
+  "nonebot-plugin-chatrecorder>=0.6.0,<0.7.0",
   "nonebot-plugin-send-anything-anywhere>=0.6.0",
 ]
 
