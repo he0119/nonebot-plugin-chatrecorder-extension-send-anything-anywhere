@@ -9,6 +9,7 @@ from nonebot_plugin_chatrecorder.utils import scope_value
 from nonebot_plugin_orm import get_session
 from nonebot_plugin_saa import (
     PlatformTarget,
+    TargetDiscordChannel,
     TargetDoDoChannel,
     TargetDoDoPrivate,
     TargetFeishuGroup,
@@ -17,9 +18,12 @@ from nonebot_plugin_saa import (
     TargetKaiheilaPrivate,
     TargetOB12Unknow,
     TargetQQGroup,
+    TargetQQGroupOpenId,
     TargetQQGuildChannel,
     TargetQQGuildDirect,
     TargetQQPrivate,
+    TargetQQPrivateOpenId,
+    TargetSatoriUnknown,
     TargetTelegramCommon,
     TargetTelegramForum,
 )
@@ -49,6 +53,14 @@ def target_to_filter_statement(target: PlatformTarget) -> list[ColumnElement[boo
         scope = SupportScope.qq_guild
         scene_id = str(target.channel_id)
         scene_type = SceneType.CHANNEL_TEXT
+    elif isinstance(target, TargetQQPrivateOpenId):
+        scope = SupportScope.qq_api
+        scene_id = target.user_openid
+        scene_type = SceneType.PRIVATE
+    elif isinstance(target, TargetQQGroupOpenId):
+        scope = SupportScope.qq_api
+        scene_id = target.group_openid
+        scene_type = SceneType.GROUP
     elif isinstance(target, TargetKaiheilaPrivate):
         scope = SupportScope.kook
         scene_id = target.user_id
@@ -80,6 +92,10 @@ def target_to_filter_statement(target: PlatformTarget) -> list[ColumnElement[boo
         scope = SupportScope.dodo
         scene_id = target.channel_id
         scene_type = SceneType.CHANNEL_TEXT
+    elif isinstance(target, TargetDiscordChannel):
+        scope = SupportScope.discord
+        scene_id = target.channel_id
+        scene_type = SceneType.CHANNEL_TEXT
     elif isinstance(target, TargetOB12Unknow):
         scope = SupportScope.ensure_ob12(target.platform)
         if target.detail_type == "private":
@@ -87,6 +103,17 @@ def target_to_filter_statement(target: PlatformTarget) -> list[ColumnElement[boo
             scene_type = SceneType.PRIVATE
         elif target.detail_type == "group":
             scene_id = target.group_id
+            scene_type = SceneType.GROUP
+        else:
+            scene_id = target.channel_id
+            scene_type = SceneType.CHANNEL_TEXT
+    elif isinstance(target, TargetSatoriUnknown):
+        scope = SupportScope.ensure_satori(target.platform)
+        if target.channel_id is None:
+            scene_id = target.user_id
+            scene_type = SceneType.PRIVATE
+        elif target.guild_id is None:
+            scene_id = target.channel_id
             scene_type = SceneType.GROUP
         else:
             scene_id = target.channel_id

@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 
 ### Added
 
-- 适配 chatrecorder 0.7.0
+- 适配 chatrecorder 0.7.0 和 saa 0.7.1
 
 ## [0.4.2] - 2024-12-24
 
