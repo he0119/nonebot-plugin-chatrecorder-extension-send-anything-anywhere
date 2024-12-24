@@ -22,7 +22,7 @@ async def app(tmp_path: Path, mocker: MockerFixture):
     nonebot.require("nonebot_plugin_cesaa")
     from nonebot_plugin_chatrecorder.model import MessageRecord
     from nonebot_plugin_orm import get_session, init_orm
-    from nonebot_plugin_session_orm import SessionModel
+    from nonebot_plugin_uninfo.orm import BotModel, SceneModel, SessionModel, UserModel
 
     mocker.patch("nonebot_plugin_orm._data_dir", tmp_path / "orm")
 
@@ -34,3 +34,6 @@ async def app(tmp_path: Path, mocker: MockerFixture):
     async with get_session() as session, session.begin():
         await session.execute(delete(MessageRecord))
         await session.execute(delete(SessionModel))
+        await session.execute(delete(SceneModel))
+        await session.execute(delete(BotModel))
+        await session.execute(delete(UserModel))
