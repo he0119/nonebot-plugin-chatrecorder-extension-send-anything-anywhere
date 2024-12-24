@@ -8,8 +8,8 @@ license = { file = "LICENSE" }
 requires-python = ">= 3.9"
 dependencies = [
   "nonebot2>=2.2.0",
-  "nonebot-plugin-chatrecorder>=0.6.0,<0.7.0",
-  "nonebot-plugin-send-anything-anywhere>=0.6.0",
+  "nonebot-plugin-chatrecorder>=0.7.0",
+  "nonebot-plugin-send-anything-anywhere>=0.7.1",
 ]
 
 [project.urls]
@@ -33,7 +33,7 @@ only-include = ["nonebot_plugin_cesaa"]
 
 [tool.uv]
 dev-dependencies = [
-  "nonebug>=0.3.7",
+  "nonebug>=0.4.3",
   "pytest-cov>=5.0.0",
   "pytest-xdist>=3.6.1",
   "pytest-mock>=3.14.0",
